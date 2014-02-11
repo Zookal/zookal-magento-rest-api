@@ -5,7 +5,7 @@ require 'magento_rest_api/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "magento_rest_api"
-  spec.version       = MagentoRestAPI::VERSION
+  spec.version       = MagentoRestApi::VERSION
   spec.authors       = ["Michael Imstepf"]
   spec.email         = ["michael.imstepf@gmail.com"]
   spec.summary       = %q{Ruby wrapper for the Magento REST API}

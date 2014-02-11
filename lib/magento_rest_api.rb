@@ -1,8 +1,8 @@
 require "magento_rest_api/version"
 
-module MagentoRestAPI
+module MagentoRestApi
   class << self
-    attr_accessor :consumer_key, :consumer_secret, :site, :access_key, :access_secret
+    attr_accessor :consumer_key, :consumer_secret, :site, :access_key, :access_secret, :url_params
   end
 
   def self.configure(&block)
@@ -24,18 +24,21 @@ module MagentoRestAPI
         if response.body == "[]" || response.code.to_i != 200
           attributes = {}
         else
-          attributes = MultiJson.decode(response.body)
-          attributes = attributes[attributes.keys.first] 
+          decoded_response_body = MultiJson.decode(response.body)
+          attributes = decoded_response[decoded_response_body.keys.first] 
         end
       else
         attributes = {}
       end
 
-      meta = prepare_meta_information(attributes, opts, purchase_type_id, response)
-      attributes[:status] = meta[:status]
-      attributes[:message] = meta[:message]
-      attributes[:errors] = meta[:errors]
-      attributes[:exists?] = meta[:exists?]
+      meta_attributes = prepare_meta_attributes(attributes, opts, purchase_type_id, response)
+      attributes[:status] = meta_attributes[:status]
+      attributes[:message] = meta_attributes[:message]
+      attributes[:errors] = meta_attributes[:errors]
+      
+      additional_attributes = prepare_additional_attributes(attributes, decoded_response_body.keys.first)
+      attributes[:exists?] = additional_attributes[:exists?]
+      attributes[:url_with_params] = additional_attributes[:url_with_params]
 
       OpenStruct.new(attributes)    
     end
@@ -43,8 +46,8 @@ module MagentoRestAPI
   private
 
     def prepare_access_token
-      consumer = OAuth::Consumer.new(MagentoRestAPI.consumer_key, MagentoRestAPI.consumer_secret, :site => MagentoRestAPI.site)
-      token_hash = {oauth_token: MagentoRestAPI.access_key, oauth_token_secret: MagentoRestAPI.access_secret}
+      consumer = OAuth::Consumer.new(MagentoRestApi.consumer_key, MagentoRestApi.consumer_secret, :site => MagentoRestApi.site)
+      token_hash = {oauth_token: MagentoRestApi.access_key, oauth_token_secret: MagentoRestApi.access_secret}
       access_token = OAuth::AccessToken.from_hash(consumer, token_hash)
     end
 
@@ -52,35 +55,49 @@ module MagentoRestAPI
       return nil unless purchase_type.is_a? String
       case purchase_type.downcase
         when "buy new" then 56
-        when "rent" then 55
+        when "rent" then 55        
         else return nil
       end
     end
 
-    def prepare_meta_information(attributes, opts, purchase_type_id, response)
+    def prepare_additional_attributes(attributes, entity_id)
+      additional = {}
+
+      additional[:exists?] = attributes["sku"] ? true : false
+
+      if attributes["url_key"]
+        additional[:url_with_params] = "#{MagentoRestApi.site}/#{attributes["url_key"]}-#{entity_id}.html"
+        if MagentoRestApi.url_params
+          additional[:url_with_params] = additional[:url_with_params] + "?#{MagentoRestApi.url_params}"
+        end
+      end             
+    end
+
+
+    def prepare_meta_attributes(attributes, opts, purchase_type_id, response)
       meta = {}
 
-      unless MagentoRestAPI.consumer_key
+      unless MagentoRestApi.consumer_key
         meta[:errors] ||= []
         meta[:errors] << "config.consumer_key not specified in initializer file"
       end
 
-      unless MagentoRestAPI.consumer_secret
+      unless MagentoRestApi.consumer_secret
         meta[:errors] ||= []
         meta[:errors] << "config.consumer_secret not specified in initializer file"
       end
 
-      unless MagentoRestAPI.site
+      unless MagentoRestApi.site
         meta[:errors] ||= []
         meta[:errors] << "config.site not specified in initializer file"
       end
 
-      unless MagentoRestAPI.access_key
+      unless MagentoRestApi.access_key
         meta[:errors] ||= []
         meta[:errors] << "config.access_key not specified in initializer file"
       end
 
-      unless MagentoRestAPI.access_secret
+      unless MagentoRestApi.access_secret
         meta[:errors] ||= []
         meta[:errors] << "config.access_secret not specified in initializer file"
       end                                          
@@ -110,9 +127,7 @@ module MagentoRestAPI
           meta[:errors] ||= []
           meta[:errors] << meta[:message]
         end
-      end
-
-      meta[:exists?] = attributes["sku"] ? true : false
+      end      
 
       meta
     end
