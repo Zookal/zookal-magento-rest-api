@@ -6,7 +6,7 @@ Ruby wrapper for backend Magento REST API calls. Prior authentication & authoriz
 
 Add this line to your application's Gemfile:
 
-    gem 'magento-rest-api'
+    gem 'magento_rest_api'
 
 And then execute:
 
@@ -14,7 +14,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install magento-rest-api
+    $ gem install magento_rest_api
 
 ## Setup
 
