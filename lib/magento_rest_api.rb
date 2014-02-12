@@ -16,29 +16,27 @@ module MagentoRestApi
 
     def find_by(opts)
       @access_token ||= prepare_access_token       
+      
       purchase_type_id = translate_purchase_type_to_purchase_type_id(opts[:purchase_type])      
       
       # rescue in case a configuration setting is missing, which will crash OAuth
       response = @access_token.get("/api/rest/products?filter[1][attribute]=isbn&filter[1][eq]=#{opts[:isbn]}&filter[2][attribute]=purchase_type&filter[2][eq]=#{purchase_type_id}&filter[3][attribute]=status&filter[3][eq]=1") rescue nil
-      if response
-        if response.body == "[]" || response.code.to_i != 200
-          attributes = {}
-        else
-          decoded_response_body = MultiJson.decode(response.body)
-          attributes = decoded_response[decoded_response_body.keys.first] 
-        end
-      else
-        attributes = {}
-      end
+      response_status = response.code.to_i rescue nil
+      response_message = response.message rescue nil
+      response_body_decoded = response ? MultiJson.decode(response.body) : nil      
+      response_o_auth_error_message = get_oauth_error_message(response_body_decoded)      
 
-      meta_attributes = prepare_meta_attributes(attributes, opts, purchase_type_id, response)
-      attributes[:status] = meta_attributes[:status]
-      attributes[:message] = meta_attributes[:message]
-      attributes[:errors] = meta_attributes[:errors]
+      attributes = get_book_attributes(response_body_decoded)
+      entity_id = get_entity_id(attributes, response_body_decoded)
+
+      attributes[:meta_status] = response_status if response_status
+      attributes[:meta_message] = response_message if response_message
+      errors = get_errors(opts, purchase_type_id, response_o_auth_error_message)      
+      attributes[:meta_errors] = errors if errors
       
-      additional_attributes = prepare_additional_attributes(attributes, decoded_response_body.keys.first)
-      attributes[:exists?] = additional_attributes[:exists?]
-      attributes[:url_with_params] = additional_attributes[:url_with_params]
+      attributes[:present?] = is_book_present?(attributes)
+      url_with_params = get_url_with_params(attributes, entity_id)
+      attributes[:url_with_params] = url_with_params if url_with_params
 
       OpenStruct.new(attributes)    
     end
@@ -60,76 +58,76 @@ module MagentoRestApi
       end
     end
 
-    def prepare_additional_attributes(attributes, entity_id)
-      additional = {}
-
-      additional[:exists?] = attributes["sku"] ? true : false
-
-      if attributes["url_key"]
-        additional[:url_with_params] = "#{MagentoRestApi.site}/#{attributes["url_key"]}-#{entity_id}.html"
-        if MagentoRestApi.url_params
-          additional[:url_with_params] = additional[:url_with_params] + "?#{MagentoRestApi.url_params}"
-        end
-      end             
+    def get_oauth_error_message(response_body_decoded)
+      response_body_decoded["messages"]["error"].first["message"] rescue nil
     end
 
+    def get_book_attributes(response_body_decoded)
+      sku = response_body_decoded.values.first["sku"] rescue nil
+      sku ? response_body_decoded.values.first : {}
+    end
 
-    def prepare_meta_attributes(attributes, opts, purchase_type_id, response)
-      meta = {}
+    def get_entity_id(attributes, response_body_decoded)
+      return nil unless attributes.any?
+      response_body_decoded.keys.first
+    end
+
+    def get_errors(opts, purchase_type_id, response_o_auth_error_message)
+      errors = []
 
       unless MagentoRestApi.consumer_key
-        meta[:errors] ||= []
-        meta[:errors] << "config.consumer_key not specified in initializer file"
+        errors << "config.consumer_key not specified in initializer file"
       end
 
       unless MagentoRestApi.consumer_secret
-        meta[:errors] ||= []
-        meta[:errors] << "config.consumer_secret not specified in initializer file"
+        errors << "config.consumer_secret not specified in initializer file"
       end
 
       unless MagentoRestApi.site
-        meta[:errors] ||= []
-        meta[:errors] << "config.site not specified in initializer file"
+        errors << "config.site not specified in initializer file"
       end
 
       unless MagentoRestApi.access_key
-        meta[:errors] ||= []
-        meta[:errors] << "config.access_key not specified in initializer file"
+        errors << "config.access_key not specified in initializer file"
       end
 
       unless MagentoRestApi.access_secret
-        meta[:errors] ||= []
-        meta[:errors] << "config.access_secret not specified in initializer file"
+        errors << "config.access_secret not specified in initializer file"
       end                                          
 
       unless opts.has_key?(:isbn)
-        meta[:errors] ||= []
-        meta[:errors] << "Attribute isbn not specified"
+        errors << "Attribute isbn not specified"
       end
 
       unless opts.has_key?(:purchase_type)
-        meta[:errors] ||= []
-        meta[:errors] << "Attribute purchase_type not specified"
+        errors << "Attribute purchase_type not specified"
       end
 
       unless purchase_type_id
-        meta[:errors] ||= []
-        meta[:errors] << "Invalid value for attribute purchase_type"
+        errors << "Invalid value for attribute purchase_type"
       end
 
-      if response
-        # convert status & message
-        meta[:status] = response.code.to_i
-        meta[:message] = response.message
-        
-        # copy HTTP message to error arrray
-        unless meta[:status] == 200
-          meta[:errors] ||= []
-          meta[:errors] << meta[:message]
-        end
+      if response_o_auth_error_message
+        errors << response_o_auth_error_message
       end      
 
-      meta
+      errors.any? ? errors : nil
     end
+
+    def is_book_present?(attributes)
+      attributes["sku"] ? true : false
+    end
+
+    def get_url_with_params(attributes, entity_id)
+      return nil unless MagentoRestApi.site && attributes["url_key"] && entity_id
+      
+      url = "#{MagentoRestApi.site}/catalog/product/view/id/#{entity_id}"
+      if MagentoRestApi.url_params
+        url = url + "?#{MagentoRestApi.url_params}"
+      end
+      
+      url             
+    end
+
   end
 end
