@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'magento_rest_api/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "magento_rest_api"
+  spec.name          = "magento-rest-api"
   spec.version       = MagentoRestApi::VERSION
   spec.authors       = ["Michael Imstepf"]
   spec.email         = ["michael.imstepf@gmail.com"]
