@@ -52,7 +52,7 @@ Get attributes
     
 ```    
 book_buy_new.url_with_params    # Full URL with specified params in `config/magento_rest_api.rb`
-book_buy_new.special_price      # RRP
+book_buy_new.special_price      # Price
 book_buy_new.price              # RRP
 book_buy_new.author             # Author
 book_buy_new.sku                # SKU
