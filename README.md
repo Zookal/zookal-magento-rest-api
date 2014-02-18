@@ -50,15 +50,18 @@ Check if a book exists
 
 Get attributes
     
-    book_buy_new.url_with_params    # Full URL with specified params in `config/magento_rest_api.rb`
-    book_buy_new.price              # RRP
-    book_buy_new.author             # Author
-    book_buy_new.sku                # SKU
-    book_buy_new.name               # Name
-    book_buy_new.edition            # Edition
-    book_buy_new.publisher          # Publisher
-    book_buy_new.year               # Year
-    book_buy_new.pages              # Pages
+```    
+book_buy_new.url_with_params    # Full URL with specified params in `config/magento_rest_api.rb`
+book_buy_new.special_price      # RRP
+book_buy_new.price              # RRP
+book_buy_new.author             # Author
+book_buy_new.sku                # SKU
+book_buy_new.name               # Name
+book_buy_new.edition            # Edition
+book_buy_new.publisher          # Publisher
+book_buy_new.year               # Year
+book_buy_new.pages              # Pages
+```
     
 Get list of all attributes in console
 
