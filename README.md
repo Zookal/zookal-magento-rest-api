@@ -18,7 +18,7 @@ Or install it yourself as:
 
 ## Setup
 
-Create a file `config/magento_rest_api.rb` with the following content:
+Create a file `config/initializers/magento_rest_api.rb` with the following content and restart Rails after saving the file:
 
     MagentoRestApi.configure do |config|
       config.consumer_key = "123dsfdsafQ231"                                                             # from Magento Admin panel
