@@ -23,7 +23,18 @@ module MagentoRestApi
       response = @access_token.get("/api/rest/products?filter[1][attribute]=isbn&filter[1][eq]=#{opts[:isbn]}&filter[2][attribute]=purchase_type&filter[2][eq]=#{purchase_type_id}&filter[3][attribute]=status&filter[3][eq]=1") rescue nil
       response_status = response.code.to_i rescue nil
       response_message = response.message rescue nil
-      response_body_decoded = response ? MultiJson.decode(response.body) : nil      
+      # decode response body and rescue if there's a ParseError (e.g. when Magento returns HTML after invalid authentication)
+      if response        
+        begin
+          response_body_decoded = MultiJson.decode(response.body)
+        rescue MultiJson::ParseError => exception
+          puts "MultiJson::ParseError"
+          puts exception
+          response_body_decoded = nil
+        end
+      else
+        response_body_decoded = nil
+      end
       response_o_auth_error_message = get_oauth_error_message(response_body_decoded)      
 
       attributes = get_book_attributes(response_body_decoded)
