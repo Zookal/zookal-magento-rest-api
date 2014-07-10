@@ -18,7 +18,7 @@ Or install it yourself as:
 
 ## Setup
 
-Create a file `config/magento_rest_api.rb` with the following content:
+Create a file `config/initializers/magento_rest_api.rb` with the following content and restart Rails after saving the file:
 
     MagentoRestApi.configure do |config|
       config.consumer_key = "123dsfdsafQ231"                                                             # from Magento Admin panel
@@ -50,15 +50,18 @@ Check if a book exists
 
 Get attributes
     
-    book_buy_new.url_with_params    # Full URL with specified params in `config/magento_rest_api.rb`
-    book_buy_new.price              # RRP
-    book_buy_new.author             # Author
-    book_buy_new.sku                # SKU
-    book_buy_new.name               # Name
-    book_buy_new.edition            # Edition
-    book_buy_new.publisher          # Publisher
-    book_buy_new.year               # Year
-    book_buy_new.pages              # Pages
+```    
+book_buy_new.url_with_params    # Full URL with specified params in `config/magento_rest_api.rb`
+book_buy_new.special_price      # Price
+book_buy_new.price              # RRP
+book_buy_new.author             # Author
+book_buy_new.sku                # SKU
+book_buy_new.name               # Name
+book_buy_new.edition            # Edition
+book_buy_new.publisher          # Publisher
+book_buy_new.year               # Year
+book_buy_new.pages              # Pages
+```
     
 Get list of all attributes in console
 
