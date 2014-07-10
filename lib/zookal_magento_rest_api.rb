@@ -1,6 +1,6 @@
-require "magento_rest_api/version"
+require "zookal_magento_rest_api/version"
 
-module MagentoRestApi
+module ZookalMagentoRestApi
   class << self
     attr_accessor :consumer_key, :consumer_secret, :site, :access_key, :access_secret, :url_params
   end
@@ -55,8 +55,8 @@ module MagentoRestApi
   private
 
     def prepare_access_token
-      consumer = OAuth::Consumer.new(MagentoRestApi.consumer_key, MagentoRestApi.consumer_secret, :site => MagentoRestApi.site)
-      token_hash = {oauth_token: MagentoRestApi.access_key, oauth_token_secret: MagentoRestApi.access_secret}
+      consumer = OAuth::Consumer.new(ZookalMagentoRestApi.consumer_key, ZookalMagentoRestApi.consumer_secret, :site => ZookalMagentoRestApi.site)
+      token_hash = {oauth_token: ZookalMagentoRestApi.access_key, oauth_token_secret: ZookalMagentoRestApi.access_secret}
       access_token = OAuth::AccessToken.from_hash(consumer, token_hash)
     end
 
@@ -86,23 +86,23 @@ module MagentoRestApi
     def get_errors(opts, purchase_type_id, response_o_auth_error_message)
       errors = []
 
-      unless MagentoRestApi.consumer_key
+      unless ZookalMagentoRestApi.consumer_key
         errors << "config.consumer_key not specified in initializer file"
       end
 
-      unless MagentoRestApi.consumer_secret
+      unless ZookalMagentoRestApi.consumer_secret
         errors << "config.consumer_secret not specified in initializer file"
       end
 
-      unless MagentoRestApi.site
+      unless ZookalMagentoRestApi.site
         errors << "config.site not specified in initializer file"
       end
 
-      unless MagentoRestApi.access_key
+      unless ZookalMagentoRestApi.access_key
         errors << "config.access_key not specified in initializer file"
       end
 
-      unless MagentoRestApi.access_secret
+      unless ZookalMagentoRestApi.access_secret
         errors << "config.access_secret not specified in initializer file"
       end                                          
 
@@ -130,11 +130,11 @@ module MagentoRestApi
     end
 
     def get_url_with_params(attributes, entity_id)
-      return nil unless MagentoRestApi.site && attributes["url_key"] && entity_id
+      return nil unless ZookalMagentoRestApi.site && attributes["url_key"] && entity_id
       
-      url = "#{MagentoRestApi.site}/catalog/product/view/id/#{entity_id}"
-      if MagentoRestApi.url_params
-        url = url + "?#{MagentoRestApi.url_params}"
+      url = "#{ZookalMagentoRestApi.site}/catalog/product/view/id/#{entity_id}"
+      if ZookalMagentoRestApi.url_params
+        url = url + "?#{ZookalMagentoRestApi.url_params}"
       end
       
       url             

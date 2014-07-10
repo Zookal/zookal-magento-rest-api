@@ -1,5 +1,5 @@
-ENV["RAILS_ENV"] ||= 'test'
-require "magento_rest_api"
+# ENV["RAILS_ENV"] ||= 'test'
+require "zookal_magento_rest_api"
 require "pry"
 require "webmock/rspec"
 
@@ -12,7 +12,6 @@ RSpec.configure do |config|
   config.order = "random"
   
   # when a focus tag is present in RSpec, only run tests with focus tag: http://railscasts.com/episodes/285-spork
-  config.treat_symbols_as_metadata_keys_with_true_values = true
   config.filter_run :focus => true
   config.run_all_when_everything_filtered = true  
 end

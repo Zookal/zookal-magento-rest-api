@@ -1,21 +1,21 @@
 require "spec_helper"
 
-describe MagentoRestApi::Client do  
+describe ZookalMagentoRestApi::Client do  
   response_body_book_buy_new = "{\"2378\":{\"status\":\"1\", \"sku\":\"978123432423\", \"url_key\":\"marketing-and-the-law\"}}"
   response_body_unauthorized = "{\"messages\":{\"error\":[{\"code\":401,\"message\":\"oauth_problem=consumer_key_rejected\"}]}}"
   after(:each) do
-    reset_class_variables MagentoRestApi
+    reset_class_variables ZookalMagentoRestApi
   end
 
   context "when a configuration attribute is missing in the initializer file" do            
     it "set the correct attributes" do
-      MagentoRestApi.consumer_key = nil
-      MagentoRestApi.consumer_secret = "secret"
-      MagentoRestApi.site = "https://www.zookal.com"
-      MagentoRestApi.access_key = "key"
-      MagentoRestApi.access_secret = "secret"
+      ZookalMagentoRestApi.consumer_key = nil
+      ZookalMagentoRestApi.consumer_secret = "secret"
+      ZookalMagentoRestApi.site = "https://www.zookal.com"
+      ZookalMagentoRestApi.access_key = "key"
+      ZookalMagentoRestApi.access_secret = "secret"
 
-      magento_client = MagentoRestApi::Client.new
+      magento_client = ZookalMagentoRestApi::Client.new
 
       WebMock.stub_request(:get, "https://www.zookal.com/api/rest/products?filter[1][attribute]=isbn&filter[1][eq]=123&filter[2][attribute]=purchase_type&filter[2][eq]=56&filter[3][attribute]=status&filter[3][eq]=1")
            .to_return(:status => 401,
@@ -31,13 +31,13 @@ describe MagentoRestApi::Client do
 
   context "when two configuration attributes are missing in the initializer file" do            
     it "set the correct attributes" do
-      MagentoRestApi.consumer_key = nil
-      MagentoRestApi.consumer_secret = "secret"
-      MagentoRestApi.site = "https://www.zookal.com"    
-      MagentoRestApi.access_key = nil
-      MagentoRestApi.access_secret = "secret"
+      ZookalMagentoRestApi.consumer_key = nil
+      ZookalMagentoRestApi.consumer_secret = "secret"
+      ZookalMagentoRestApi.site = "https://www.zookal.com"    
+      ZookalMagentoRestApi.access_key = nil
+      ZookalMagentoRestApi.access_secret = "secret"
 
-      magento_client = MagentoRestApi::Client.new
+      magento_client = ZookalMagentoRestApi::Client.new
 
       WebMock.stub_request(:get, "https://www.zookal.com/api/rest/products?filter[1][attribute]=isbn&filter[1][eq]=123&filter[2][attribute]=purchase_type&filter[2][eq]=56&filter[3][attribute]=status&filter[3][eq]=1")
            .to_return(:status => 401,
@@ -54,13 +54,13 @@ describe MagentoRestApi::Client do
 
   context "when no book was found" do            
     it "set the correct attributes" do
-      MagentoRestApi.consumer_key = "key"
-      MagentoRestApi.consumer_secret = "secret"
-      MagentoRestApi.site = "https://www.zookal.com"    
-      MagentoRestApi.access_key = "key"
-      MagentoRestApi.access_secret = "secret"
+      ZookalMagentoRestApi.consumer_key = "key"
+      ZookalMagentoRestApi.consumer_secret = "secret"
+      ZookalMagentoRestApi.site = "https://www.zookal.com"    
+      ZookalMagentoRestApi.access_key = "key"
+      ZookalMagentoRestApi.access_secret = "secret"
 
-      magento_client = MagentoRestApi::Client.new
+      magento_client = ZookalMagentoRestApi::Client.new
 
       WebMock.stub_request(:get, "https://www.zookal.com/api/rest/products?filter[1][attribute]=isbn&filter[1][eq]=123&filter[2][attribute]=purchase_type&filter[2][eq]=56&filter[3][attribute]=status&filter[3][eq]=1")
            .to_return(:status => 200,
@@ -76,13 +76,13 @@ describe MagentoRestApi::Client do
 
   context "when purchase_type was not specified" do            
     it "set the correct attributes" do
-      MagentoRestApi.consumer_key = "key"
-      MagentoRestApi.consumer_secret = "secret"
-      MagentoRestApi.site = "https://www.zookal.com"    
-      MagentoRestApi.access_key = "key"
-      MagentoRestApi.access_secret = "secret"
+      ZookalMagentoRestApi.consumer_key = "key"
+      ZookalMagentoRestApi.consumer_secret = "secret"
+      ZookalMagentoRestApi.site = "https://www.zookal.com"    
+      ZookalMagentoRestApi.access_key = "key"
+      ZookalMagentoRestApi.access_secret = "secret"
 
-      magento_client = MagentoRestApi::Client.new
+      magento_client = ZookalMagentoRestApi::Client.new
 
       WebMock.stub_request(:get, "https://www.zookal.com/api/rest/products?filter[1][attribute]=isbn&filter[1][eq]=123&filter[2][attribute]=purchase_type&filter[2][eq]=&filter[3][attribute]=status&filter[3][eq]=1")
            .to_return(:status => 200,
@@ -98,13 +98,13 @@ describe MagentoRestApi::Client do
 
   context "when isbn was not specified" do            
     it "set the correct attributes" do
-      MagentoRestApi.consumer_key = "key"
-      MagentoRestApi.consumer_secret = "secret"
-      MagentoRestApi.site = "https://www.zookal.com"    
-      MagentoRestApi.access_key = "key"
-      MagentoRestApi.access_secret = "secret"
+      ZookalMagentoRestApi.consumer_key = "key"
+      ZookalMagentoRestApi.consumer_secret = "secret"
+      ZookalMagentoRestApi.site = "https://www.zookal.com"    
+      ZookalMagentoRestApi.access_key = "key"
+      ZookalMagentoRestApi.access_secret = "secret"
 
-      magento_client = MagentoRestApi::Client.new
+      magento_client = ZookalMagentoRestApi::Client.new
 
       WebMock.stub_request(:get, "https://www.zookal.com/api/rest/products?filter[1][attribute]=isbn&filter[1][eq]=&filter[2][attribute]=purchase_type&filter[2][eq]=56&filter[3][attribute]=status&filter[3][eq]=1")
            .to_return(:status => 200,
@@ -120,13 +120,13 @@ describe MagentoRestApi::Client do
 
   context "when invalid purchase_type was entered" do            
     it "set the correct attributes" do
-      MagentoRestApi.consumer_key = "key"
-      MagentoRestApi.consumer_secret = "secret"
-      MagentoRestApi.site = "https://www.zookal.com"    
-      MagentoRestApi.access_key = "key"
-      MagentoRestApi.access_secret = "secret"
+      ZookalMagentoRestApi.consumer_key = "key"
+      ZookalMagentoRestApi.consumer_secret = "secret"
+      ZookalMagentoRestApi.site = "https://www.zookal.com"    
+      ZookalMagentoRestApi.access_key = "key"
+      ZookalMagentoRestApi.access_secret = "secret"
 
-      magento_client = MagentoRestApi::Client.new
+      magento_client = ZookalMagentoRestApi::Client.new
 
       WebMock.stub_request(:get, "https://www.zookal.com/api/rest/products?filter[1][attribute]=isbn&filter[1][eq]=123&filter[2][attribute]=purchase_type&filter[2][eq]=&filter[3][attribute]=status&filter[3][eq]=1")
            .to_return(:status => 200,
@@ -142,14 +142,14 @@ describe MagentoRestApi::Client do
 
   context "when requested book was found and no url params exists" do            
     it "set the correct attributes" do
-      MagentoRestApi.consumer_key = "key"
-      MagentoRestApi.consumer_secret = "secret"
-      MagentoRestApi.site = "https://www.zookal.com"    
-      MagentoRestApi.access_key = "key"
-      MagentoRestApi.access_secret = "secret"
-      MagentoRestApi.url_params = nil
+      ZookalMagentoRestApi.consumer_key = "key"
+      ZookalMagentoRestApi.consumer_secret = "secret"
+      ZookalMagentoRestApi.site = "https://www.zookal.com"    
+      ZookalMagentoRestApi.access_key = "key"
+      ZookalMagentoRestApi.access_secret = "secret"
+      ZookalMagentoRestApi.url_params = nil
 
-      magento_client = MagentoRestApi::Client.new
+      magento_client = ZookalMagentoRestApi::Client.new
 
       WebMock.stub_request(:get, "https://www.zookal.com/api/rest/products?filter[1][attribute]=isbn&filter[1][eq]=123&filter[2][attribute]=purchase_type&filter[2][eq]=56&filter[3][attribute]=status&filter[3][eq]=1")
            .to_return(:status => 200,
@@ -165,14 +165,14 @@ describe MagentoRestApi::Client do
 
   context "when requested book was found and url params exists" do            
     it "set the correct attributes" do
-      MagentoRestApi.consumer_key = "key"
-      MagentoRestApi.consumer_secret = "secret"
-      MagentoRestApi.site = "https://www.zookal.com"    
-      MagentoRestApi.access_key = "key"
-      MagentoRestApi.access_secret = "secret"
-      MagentoRestApi.url_params = "utm_source=company&utm_medium=affiliate&utm_campaign=2014"      
+      ZookalMagentoRestApi.consumer_key = "key"
+      ZookalMagentoRestApi.consumer_secret = "secret"
+      ZookalMagentoRestApi.site = "https://www.zookal.com"    
+      ZookalMagentoRestApi.access_key = "key"
+      ZookalMagentoRestApi.access_secret = "secret"
+      ZookalMagentoRestApi.url_params = "utm_source=company&utm_medium=affiliate&utm_campaign=2014"      
 
-      magento_client = MagentoRestApi::Client.new
+      magento_client = ZookalMagentoRestApi::Client.new
 
       WebMock.stub_request(:get, "https://www.zookal.com/api/rest/products?filter[1][attribute]=isbn&filter[1][eq]=123&filter[2][attribute]=purchase_type&filter[2][eq]=56&filter[3][attribute]=status&filter[3][eq]=1")
            .to_return(:status => 200,

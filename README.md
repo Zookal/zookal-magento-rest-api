@@ -1,12 +1,12 @@
-# MagentoRestApi
+# ZookalMagentoRestApi
 
-Ruby wrapper for backend Magento REST API calls. Prior authentication & authorization (through oAuth) required.
+Ruby wrapper for backend calls to Zookal's Magento store. Prior authentication & authorization (through oAuth) required.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'magento_rest_api'
+    gem 'zookal_magento_rest_api'
 
 And then execute:
 
@@ -14,13 +14,13 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install magento_rest_api
+    $ gem install zookal_magento_rest_api
 
 ## Setup
 
-Create a file `config/initializers/magento_rest_api.rb` with the following content and restart Rails after saving the file:
+Create a file `config/initializers/zookal_magento_rest_api.rb` with the following content and restart Rails after saving the file:
 
-    MagentoRestApi.configure do |config|
+    ZookalMagentoRestApi.configure do |config|
       config.consumer_key = "123dsfdsafQ231"                                                             # from Magento Admin panel
       config.consumer_secret = "23dfsfFdsfsdee"                                                          # from Magento Admin panel
       config.site = "https://www.zookal.com"                                                             # without trailing slash and no redirects (e.g. root domain to www)
@@ -37,12 +37,12 @@ Information on how to obtain access_key and access_secret can be seen [here](htt
 
 Instantiate a client
 
-    magento_client = MagentoRestApi::Client.new
+    zookal_magento_client = ZookalMagentoRestApi::Client.new
 
 Query a book
 
-    book_buy_new = magento_client.find_by(isbn: 9781442531109, purchase_type: "Buy New")
-    book_rent = magento_client.find_by(isbn: 9781442531109, purchase_type: "Rent")
+    book_buy_new = zookal_magento_client.find_by(isbn: 9781442531109, purchase_type: "Buy New")
+    book_rent = zookal_magento_client.find_by(isbn: 9781442531109, purchase_type: "Rent")
 
 Check if a book exists
 
@@ -51,7 +51,7 @@ Check if a book exists
 Get attributes
     
 ```    
-book_buy_new.url_with_params    # Full URL with specified params in `config/magento_rest_api.rb`
+book_buy_new.url_with_params    # Full URL with specified params in `config/zookal_magento_rest_api.rb`
 book_buy_new.special_price      # Price
 book_buy_new.price              # RRP
 book_buy_new.author             # Author
@@ -75,7 +75,7 @@ Debugging
 
 ## Contributing
 
-1. Fork it ( http://github.com/<my-github-username>/magento_rest_api/fork )
+1. Fork it ( http://github.com/<my-github-username>/zookal-magento-rest-api/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)

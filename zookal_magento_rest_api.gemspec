@@ -1,16 +1,16 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'magento_rest_api/version'
+require 'zookal_magento_rest_api/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "magento_rest_api"
-  spec.version       = MagentoRestApi::VERSION
+  spec.name          = "zookal_magento_rest_api"
+  spec.version       = ZookalMagentoRestApi::VERSION
   spec.authors       = ["Michael Imstepf"]
   spec.email         = ["michael.imstepf@gmail.com"]
-  spec.summary       = %q{Ruby wrapper for the Magento REST API}
-  spec.description   = %q{Gem to do backend REST API calls to Magento. Prior authentication (through oAuth) required.}
-  spec.homepage      = "https://github.com/Zookal/magento_rest_api"
+  spec.summary       = %q{Ruby wrapper for the Zookal Magento REST API}
+  spec.description   = %q{Gem to do backend REST API calls to Zookal's Magento store. Prior authentication (through oAuth) required.}
+  spec.homepage      = "https://github.com/Zookal/zookal-magento-rest-api"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
