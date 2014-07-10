@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["michael.imstepf@gmail.com"]
   spec.summary       = %q{Ruby wrapper for the Magento REST API}
   spec.description   = %q{Gem to do backend REST API calls to Magento. Prior authentication (through oAuth) required.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/Zookal/magento_rest_api"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
