@@ -74,7 +74,7 @@ book_buy_new.pages              # Pages
 Get list of all attributes in console
 
 ```ruby
-$ book_buy_new.instance_variable_get("@table")
+book_buy_new.instance_variable_get("@table")
 ```
 
 Debugging
